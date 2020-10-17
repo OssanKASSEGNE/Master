@@ -1,43 +1,47 @@
---L = ligne et C = colonne--
-type Matf = [[(Bool,Int)]]
 
-matrice :: Int -> Int -> (Int -> Int-> (Bool,Int)) -> [[(Bool,Int)]]
-matrice l c f = [ [ f i j|j<-[1..c]] | i <-[1..l]]
+type Matf = Int -> Int -> (Bool, Int)
 
-exemple :: Int -> Int -> [[(Bool,Int)]]
-exemple l c = matrice l c (\i j -> if (i<= l && i>= 1 && j>=1 && j<= c) then (True,2*i+j) else (False,0))
+exemple :: Matf
+exemple i j | (1 <= i) && (i<= 6) && (1<= j) && (j<= 5) = (True, 2*i+j)
+            | otherwise = (False, 0)
 
+identique4x4 :: Matf
+identique4x4 i j | (1 <= i) &&  (i<= 4) && (1<= j) && (j<= 4) && i == j = (True,1)
+                  | (1 <= i) &&  (i<= 4) && (1<= j) && (j<= 4) && i /= j = (True,0)
+                  | otherwise = (False, 0)
+ident :: Matf
+ident i j | (1 <= i) &&  (i<= 6) && (1<= j) && (j<= 5) && i == j = (True,1)
+                  | (1 <= i) &&  (i<= 6) && (1<= j) && (j<= 5) && i /= j = (True,0)
+                  | otherwise = (False, 0)
 
-identite4x4 :: Int -> Int -> [[(Bool,Int)]]
-identite4x4 l c = matrice l c (\i j -> if (i== j) then (True,1) else (False,0))
+inter ::  Matf -> Int -> Int
+inter f i               -- i sera renseigné après  
+    | f i 1 /= (False,0)   = inter f (i+1)   
+    | otherwise = i-1 
+
+inter2 ::  Matf -> Int -> Int
+inter2 f j               -- i sera renseigné après  
+    | f 1 j /= (False,0)   = inter f (j+1)   
+    | otherwise = j-1 
+
 
 nbLines :: Matf -> Int
-nbLines matrice = length matrice
+nbLines f = inter f 1
+ 
+nbCol :: Matf -> Int
+--nbCol f = inter2 f 1
 
-nbCols :: Matf -> Int
-nbCols matrice = length $ head matrice
+nbCol f =  head [j-1|j<-[1..],((f 1 j) ==(False,0))]
+dims:: Matf ->(Int,Int)
+dims m = (nbLines m, nbCol m)
 
-dims :: Matf -> (Int, Int)
-dims matrice = (nbLines matrice, nbCols matrice)
+cmpDims :: Matf -> Matf -> Bool
+cmpDims m n = dims m == dims n
 
-cmpDims :: Matf -> Matf -> Bool 
-cmpDims matrice1 matrice2 = dims matrice1 ==  dims matrice2
+add :: Matf -> Matf -> Matf     --RETOURNER UNE FONCTION, C'EST RETOURNE UN LAMBDA
 
-addLine :: [(Bool,Int)] -> [(Bool,Int)] ->[(Bool,Int)]
-addLine [] [] = []
-addLine ((_,valeur):xs) ((_,valeur2):xs2)
-    | res /=0  = (True, res):(addLine xs xs2)
-    | otherwise  = (False, res):(addLine xs xs2)
-    where res = valeur + valeur2
-
-add :: Matf -> Matf -> Matf  -- vérifier les dimensions
-add [] [] = []
-add a b
-    | cmpDims a b  = (addLine x1 x2) : (add rest1 rest2)
-    | otherwise = error "Les deux matrices n'ont pas même dimension"
-    where 
-        (x1:rest1) = a
-        (x2:rest2) = b
-
-      
-           
+add m n 
+    | not (cmpDims m n) = error "pas les mêmes dimensions"
+    |otherwise = (\i j -> (if ((i>=1)&&(i<=l)&&(j>=1)&&(j<=c)) then (True,snd(m i j)+snd(n i j)) else (False,0)))
+    where
+        (l,c) = dims m

@@ -1,0 +1,145 @@
+
+<!-- saved from url=(0035)http://www.up2.fr/M1/td/TD10_2.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15">
+<title>TD 6 - Arbre de décision</title>
+
+<link rel="stylesheet" content="text/css" href="./TD 6 - Arbre de décision_files/td.css">
+</head>
+<body>
+
+<h2><center>Informatique et Techniques Numériques en Economie<br>-<br>TD 6 - Data mining - Arbres de décision</center></h2>
+
+<table width="100%">
+  <tbody><tr>
+
+    <td width="33%" align="left"><a href="http://www.up2.fr/M1/td/TD5_3.html">&lt;&lt; précédent</a></td>
+    <td width="33%" align="center"><a href="http://www.up2.fr/M1/td/index.html">index</a></td>
+    <td width="33%" align="right"><a href="http://www.up2.fr/M1/td/TD7.html">suivant &gt;&gt;</a></td>
+  </tr>
+</tbody></table>
+
+<hr>
+
+<h3>Présentation générale</h3>
+
+<p>L'objectif de ce TD est de comprendre l'algorithme ID3 qui permet la création d'un arbre de décision à partir d'un ensemble de données et de maitriser l'outil DTree qui permet de créer de manière automatique des arbres de décision à partir d'un ensemble de données.</p>
+
+<p><b>Compétences à acquérir</b></p>
+
+<ul>
+  <li>Comprendre les arbres de décision : leurs intérêts et leurs constructions<br>
+  
+  
+  </li><li>Savoir utiliser Dtree pour le data mining</li>
+  
+  <li>Savoir analyser les résultats obtenus avec Dtree</li>
+
+  
+  <li>Avoir une approche critique par rapport à l'outil d'analyse que
+  représente le data-mining</li>
+</ul>
+
+<br><hr>
+<h3>1-Rappel</h3>
+<h3>a)Qu'est ce qu'un arbre décision</h3>
+<p>Les arbres de décision sont des classifieurs pour des données
+représentées par des ensembles attribut/valeur. Un arbre est constitué :</p>
+<ul>
+<li>de noeuds qui testent les attributs</li>
+<li>de branches qui représentent chacune une valeur de l'attribut testé dans le noeud dont elles sont issues</li>
+<li>de feuilles (ce sont les noeuds terminaux de l'arbre) qui indiquent la classe résultante</li>
+</ul>
+<p>Voici un exemple d'arbre de décision, créé à partir des données contenu dans le tableau. Les attributs sont "Fievre", "Douleur" et "Toux". La classe est "Maladie".</p>
+<table border="0">
+<tbody><tr><td><table id="tableauexo1" border="5">
+	<tbody><tr><td>Fievre</td><td>Douleur</td><td>Toux</td><td>Maladie</td></tr>
+	<tr><td>oui</td><td> Abdomen</td><td> non</td><td> Appendicite</td></tr>
+	<tr><td>non</td><td> Abdomen</td><td> oui</td><td> Appendicite</td></tr>
+	<tr><td>oui</td><td> gorge</td><td> non</td><td> rhume</td></tr>
+	<tr><td>oui</td><td> gorge</td><td> oui</td><td> rhume</td></tr>
+	<tr><td>non</td><td> gorge</td><td> oui</td><td> mal de gorge</td></tr>
+	<tr><td>oui</td><td> non</td><td> non</td><td> aucune</td></tr>
+	<tr><td>oui</td><td> non</td><td> oui</td><td> rhume</td></tr>
+	<tr><td>non</td><td> non</td><td> oui</td><td> refroidissement</td></tr>
+	<tr><td>non</td><td> non</td><td> non</td><td> aucune</td></tr>
+	</tbody></table></td><td> <img src="./TD 6 - Arbre de décision_files/AD.png" align="right" border="0"></td><td></td></tr>
+</tbody></table>
+<p>Le but d'un arbre de décision est de permettre de faire de la prédiction : déterminer la classe d'un nouvel exemple à partir des valeurs de ses attributs. La prédiction est utilisée par la plupart des sites de vente. En effet lorsque vous allez sur ce genre de site, on vous propose souvent des articles susceptibles de vous intéresser. Pour cela les sites effectuent du data mining : ils collectent un grand nombre de données sur les achats et les pages visitées par les clients. À l'aide de ces données, ils peuvent ainsi déterminer quel produit ou quelle catégorie de produit est acheté en fonction des caractéristiques des clients. Lorsqu'un nouveau client lambda surfe sur le site, ce dernier est capable de proposer des articles susceptibles de lui plaire en fonction des pages qu'il visite par exemple et ainsi augmenter les chances d'achats.</p>
+<br>
+<h4>b) Apprentissage </h4>
+<p>La construction d'un arbre de décision ne se fait pas au hasard. Le but est de déterminer les meilleurs attributs à placer à chaque noeud pour que l'arbre construit soit le plus petit possible (plus l'arbre est petit plus la prédiction sera facile à obtenir) et qu'en même temps l'arbre soit capable d'effectuer de bonne prédiction. La construction d'un arbre se fait à partir d'un ensemble de données appelé base d'apprentissage. Ces données sont des exemples de la forme (A_1,...,A_N,C_i) où A_1,..,A_n sont les valeurs de chaque attribut et C_i la valeur de la classe pour l'exemple. Une fois l'arbre construit, on le teste généralement sur un ensemble de données appelé base de test.</p>
+<br>
+
+
+<h3>2-Exercices</h3>
+<p> Déterminez l'arbre de décision de l'exemple ci dessous.</p>
+<center><img src="./TD 6 - Arbre de décision_files/ex2.png"></center>
+<h3>3-Dtree</h3>
+<h4>a)Installation du logiciel</h4>
+<p>Le logiciel Dtree est disponible dans outils. Cliquez sur le lien, sauvegardez le dossier dtree.rar sur le bureau puis dézippez l'archive en cliquant dessus. Ouvrez le dossier dtree obtenu en dézippant l'archive et cliquer sur l'icone suivante <img src="./TD 6 - Arbre de décision_files/dtree.png" align="top"></p>
+<p>Vous arrivez alors devant l'interface suivante :    <img src="./TD 6 - Arbre de décision_files/dtreeInterface.png" height="500" align="top"></p>
+<br>
+<h4>b)Sélection de données existantes</h4>
+<p>Pour commencer, nous allons apprendre à utiliser Dtree à l'aide des exemples stockés dans sa base.</p>
+<ul>
+<li>Cliquez sur file [<a href="http://www.up2.fr/M1/td/imagesTD10/file.png">voir</a>]</li>
+<li>Cliquez sur load sample dataset [<a href="http://www.up2.fr/M1/td/imagesTD10/loadSample.png">voir</a>]</li>
+<li>Selectionner l'exemple "mail reading" et appuyer sur load [<a href="http://www.up2.fr/M1/td/imagesTD10/loadMail.png">voir</a>]</li>
+<li>Vous devez alors obtenir les données de l'exemple "mail reading"[<a href="http://www.up2.fr/M1/td/imagesTD10/resultat.png">voir</a>]</li>
+</ul>
+<br>
+<h4>c)Création d'une base de test</h4>
+<p>Les données sont composées d'un ensemble d'exemples qui constituent la base d'apprentissage (training examples). Il est possible de créer une base de test à partir des exemples de la base d'apprentissage.</p>
+<ul>
+<li>Cliquez sur le bouton "view/edit Ex."[<a href="http://www.up2.fr/M1/td/imagesTD10/edit.png">voir</a>].</li>
+<li> Vous pouvez alors sélectionner des exemples dans la base d'apprentissage et les basculer dans la base de test en utilisant les flèches.[<a href="http://www.up2.fr/M1/td/imagesTD10/ajoutTest.png">voir</a>].</li>
+<li><b> Ajoutez deux trois exemples dans la base de test puis validez.</b> </li> 
+</ul>
+<h4>d)Création de l'arbre de décision</h4>
+<p>Pour créer un arbre de décision à partir de votre base d'apprentissage, cliquez sur solve [<a href="http://www.up2.fr/M1/td/imagesTD10/solve.png">voir</a>]. La barre d'outils propose des boutons afin de créer, modifier l'arbre de décision : </p>
+<ul>
+<li><b>step</b>: permet de créer l'arbre pas à pas. A chaque fois que vous appuyez sur step, un attribut est séléctionné et la séparation des exemples en fonctions de cet attribut est efectué.</li>
+<li><b>auto create</b>: permet de créer l'arbre d'un seul coup</li>
+<li><b>reset graph</b>: permet d'effacer l'arbre de décision obtenu</li>
+<li><b>split node</b>: permet de choisir l'attribut pour effectuer une séparation</li>
+<li><b>test</b>: permet de tester l'arbre de décision à l'aide de la base de test</li>
+<li><b>test new example</b>: permet de tester l'arbre de décision à l'aide d'un exemple que vous créez</li>
+</ul>
+<h4>e)Création de votre propre base d'exemples</h4>
+<p>Il est possible de créer votre propre base d'exemples. </p>
+<ul>
+<li>Cliquez sur file</li>
+<li>Selectionnez "Create New DataSet"</li>
+<li>Rentrez le nom des attributs puis de la classe. Séparez chaque nom par une virgule</li>
+<li>Cliquez sur ViewEditEx </li>
+<li>Appuyez sur add pour ajouter un exemple soit à la base d'apprentissage, soit à la base de test</li>
+</ul>
+<h4>e)Exercice</h4>
+<p>Vérifiez les arbres de décisions obtenus par calcul à l'aide de Dtree.
+</p>
+<ul>
+<li> Récupérez les fichiers <a href="http://www.up2.fr/M1/td/maladie.txt">maladie</a> et <a href="http://www.up2.fr/M1/td/golf.txt">golf</a> et enregistrez les sur le bureau</li>
+<li>Cliquez sur file</li>
+<li>Sélectionnez "Create New DataSet"</li>
+<li>Rentrez le nom des attributs puis de la classe pour l'exemple maladie. Séparez chaque nom par une virgule</li>
+<li>Puis cliquez sur file et sélectionnez "load from file"</li>
+<li>Sélectionnez le fichier texte précédemment enregistré</li>
+</ul>
+<h4>f)Exercice</h4>
+<p>Utilisez phpmyadmin pour créer des données
+</p>
+<ul>
+<li> Ouvrer phpmyadmin</li>
+<li>Placer vous sur votre base de données</li>
+<li>Sélectionner l'onglet SQL</li>
+<li>Taper une requête permettant d'afficher tous vos produits</li>
+<li>Cliquer sur exporter lien en bas à droite sous le tableau</li>
+<li>Choisir csv</li>
+<li> Remplacer les champs "champs terminé par","champs entouré par" et "lignes terminé par" comme <a href="http://www.up2.fr/M1/td/phpmyadmin.png"> l'image</a></li>
+<li>Cliquer sur exécuter</li>
+<li>Utilisez le fichier csv pour créer un arbre DTree</li>
+</ul>
+
+
+
+</body></html>

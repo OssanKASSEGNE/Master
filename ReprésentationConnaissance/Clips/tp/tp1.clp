@@ -1,3 +1,4 @@
+;Ossan KASSEGNE
 ; On a 123 relations à la question 5
 (deffacts faits-initiaux
  (listeOncle)
